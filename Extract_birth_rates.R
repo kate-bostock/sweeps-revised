@@ -10,7 +10,7 @@ summary_df <- data.frame(
   stringsAsFactors=FALSE
 ) 
 
-setwd("/Users/katebostock/Documents/City_PhD/demon_model/Sweeps_revised/outputs/outputs5/simulations")
+setwd("/Users/katebostock/Documents/City_PhD/demon_model/Sweeps_revised/outputs/outputs6/simulations")
 
 get_birth_rate <- function(configid, path){
   
@@ -36,7 +36,7 @@ get_birth_rate <- function(configid, path){
   )
 }
 
-simulation_paths <- Sys.glob(file.path("/Users/katebostock/Documents/City_PhD/demon_model/Sweeps_revised/outputs/outputs5/simulations", "*"))
+simulation_paths <- Sys.glob(file.path("/Users/katebostock/Documents/City_PhD/demon_model/Sweeps_revised/outputs/outputs6/simulations", "*"))
 simulation_ids <- sapply(strsplit(simulation_paths, "/"), tail, 1)
 
 for (configid in simulation_ids){
@@ -61,6 +61,6 @@ for (configid in simulation_ids){
 
 write.csv(
   summary_df,
-  "/Users/katebostock/Documents/City_PhD/demon_model/Sweeps_revised/outputs/outputs5/birth_rates.csv"
+  "/Users/katebostock/Documents/City_PhD/demon_model/Sweeps_revised/outputs/outputs6/birth_rates.csv"
 )
 
