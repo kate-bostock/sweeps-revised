@@ -38,8 +38,8 @@ meas_wt <- read_csv("simulation_data_original/wt_speeds.csv") # contains 2560 en
 param_mut <- read_csv("simulation_data_original/params_mut.csv") # contains 12800 entries of log2_deme(1, 2, 3, 4, 5, 6, 7, 8), migration_rate (0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 0.75, 1), s_driver_birth (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2)
 meas_mut <- read_csv("simulation_data_original/mut_speeds.csv") # contains 12800 entries of speed_early, speed_late
 
-params_2mut <- read_csv("simulation_data_2mutations/params.csv") # contains 40000 entries of index, mu_driver_birth (1e-2, 1e-3, 1e-4, 1e-5, 1e-6), s_driver_birth (0.1, 0.2, 0.3, 0.4, 0.5, 1, 1.5, 2)
-probs_2mut <- read_csv("simulation_data_2mutations/sweeps-prob-descendants.csv") # contains 40000 entries of index, sweep true/false at different % levels (70, 75, 80, 90, 95, 99, 100%), more than one mutant (true/false), first mutation init time, pop radius at first mut init)
+params_2mut <- read_csv("simulation_data_2mutations/1000_sims/params.csv") # contains 40000 entries of index, mu_driver_birth (1e-2, 1e-3, 1e-4, 1e-5, 1e-6), s_driver_birth (0.1, 0.2, 0.3, 0.4, 0.5, 1, 1.5, 2)
+probs_2mut <- read_csv("simulation_data_2mutations/1000_sims/sweeps-prob-descendants.csv") # contains 40000 entries of index, sweep true/false at different % levels (70, 75, 80, 90, 95, 99, 100%), more than one mutant (true/false), first mutation init time, pop radius at first mut init)
 
 # Numerical solutions
 df_num <- read_csv("numerical_data/sweep probability vs speed ratio c_wt 0.152 mutation rate 2.34e-06 simplifying assumption 0.csv")
@@ -199,19 +199,16 @@ ggplot() +
 #  geom_line(aes(x=xaxis, y=sweep_ana,linetype=legend_3, color=legend_3), linewidth=1.5) +
 #  geom_point(aes(x=x_data, y=y_data1), color="black", size=4.0, shape=16) +
 #  geom_point(aes(x=x_data, y=y_data2), color="black", size=4.0, shape=17) +
-  geom_point(aes(x=x_data, y=y_data3, color="blue", size=4.0, shape=18)) +
+  geom_point(aes(x=x_data, y=y_data3, color="blue", size=4.0, shape="18")) +
   #geom_line(aes(x=x_data, y=fix),col = "black", linewidth=2.0) +
   labs(x="ratio of fitness difference, *a<sub>m* / *a<sub>wt*", y="Pr(sweep)") +
   xlim(0,20) + ylim(0,1) +
-  # scale_color_manual("", values = c("blue", "darkgreen","lightgreen", "black")) +
-  # scale_linetype_manual("", values = c(0, 22, 22, 22)) +
-  # scale_shape_manual("", values = c(17, 0, 0, 0)) +
-  scale_color_identity(breaks = c("blue", cols[4],cols[3], "black"), labels = c("simulation revised", "prediction (exact) s = 1 (x = 10)", "prediction (approx.) s = 1 (x = 10)", "original simulation s = 1 (x = 10)"),guide = "legend") + 
-  scale_linetype_identity(guide = "legend") + 
-  scale_shape_identity(guide = "legend") + 
+  scale_color_manual(values = colours) +
+  scale_linetype_manual(values = lty) +
+  scale_shape_manual(values = shapes) +
   theme_bw(base_size = 25) +
-  theme(axis.title.x = element_markdown(), axis.title.y = element_markdown()) 
-  #ggtitle(paste0("Sweeps cut off at ", sweep_cutoff))
+  theme(axis.title.x = element_markdown(), axis.title.y = element_markdown(), 
+        legend.position = c(5,0.8), legend.title = element_blank(), legend.text = element_markdown()) 
 
 
 # ### Save the figure

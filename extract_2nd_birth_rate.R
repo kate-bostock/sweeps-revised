@@ -10,7 +10,7 @@ summary_df <- data.frame(
   stringsAsFactors=FALSE
 ) 
 
-setwd("/Users/katebostock/Documents/City_PhD/demon_model/Sweeps_revised/outputs/outputsrevised_low_birth_rate/simulations")
+setwd("/Users/katebostock/Documents/City_PhD/demon_model/Sweeps_revised/outputs/Revised_simulations_1000/simulations")
 
 get_birth_rate <- function(configid, path){
   
@@ -26,7 +26,7 @@ get_birth_rate <- function(configid, path){
     col_types = cols()
   )
   
-  output_driver_genotype <- filter(output_driver_genotype, DriverMutations == 1)
+  output_driver_genotype <- filter(output_driver_genotype, DriverMutations == 2)
   output_driver_genotype <- filter(output_driver_genotype, Descendants == max(output_driver_genotype$Descendants))
   
   return(
@@ -36,7 +36,7 @@ get_birth_rate <- function(configid, path){
   )
 }
 
-simulation_paths <- Sys.glob(file.path("/Users/katebostock/Documents/City_PhD/demon_model/Sweeps_revised/outputs/outputsrevised_low_birth_rate/simulations", "*"))
+simulation_paths <- Sys.glob(file.path("/Users/katebostock/Documents/City_PhD/demon_model/Sweeps_revised/outputs/Revised_simulations_1000/simulations", "*"))
 simulation_ids <- sapply(strsplit(simulation_paths, "/"), tail, 1)
 
 for (configid in simulation_ids){
@@ -52,7 +52,7 @@ for (configid in simulation_ids){
   
   
   birth_rate_largest_clone = returnlist$birth_rate_largest_clone
-
+  
   
   summary_df[nrow(summary_df) + 1,] <- c(
     configid, birth_rate_largest_clone 
@@ -61,6 +61,6 @@ for (configid in simulation_ids){
 
 write.csv(
   summary_df,
-  "/Users/katebostock/Documents/City_PhD/demon_model/Sweeps_revised/outputs/outputsrevised_low_birth_rate/birth_rates.csv"
+  "/Users/katebostock/Documents/City_PhD/demon_model/Sweeps_revised/outputs/Revised_simulations_1000/birth_rates_2nd.csv"
 )
 

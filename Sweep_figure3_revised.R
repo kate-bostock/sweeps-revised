@@ -38,9 +38,9 @@ meas_wt <- read_csv("simulation_data_original/wt_speeds.csv") # contains 2560 en
 param_mut <- read_csv("simulation_data_original/params_mut.csv") # contains 12800 entries of log2_deme(1, 2, 3, 4, 5, 6, 7, 8), migration_rate (0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 0.75, 1), s_driver_birth (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2)
 meas_mut <- read_csv("simulation_data_original/mut_speeds.csv") # contains 12800 entries of speed_early, speed_late
 
-params_revised <- read_csv("simulation_data_revised/params.csv") # contains 40000 entries of index, mu_driver_birth (1e-2, 1e-3, 1e-4, 1e-5, 1e-6), s_driver_birth (0.1, 0.2, 0.3, 0.4, 0.5, 1, 1.5, 2)
-probs_revised <- read_csv("simulation_data_revised/sweeps-prob-descendants.csv") # contains 40000 entries of index, sweep true/false at different % levels (70, 75, 80, 90, 95, 99, 100%), more than one mutant (true/false), first mutation init time, pop radius at first mut init)
-birth_rates <- read_csv("simulation_data_revised/birth_rates.csv") # contains 40000 entries of the birth rate of the genotype with exactly 1 driver mutation and the most descendants
+params_revised <- read_csv("simulation_data_low_birth_rates/params.csv") # contains 40000 entries of index, mu_driver_birth (1e-2, 1e-3, 1e-4, 1e-5, 1e-6), s_driver_birth (0.1, 0.2, 0.3, 0.4, 0.5, 1, 1.5, 2)
+probs_revised <- read_csv("simulation_data_low_birth_rates/sweeps-prob-descendants.csv") # contains 40000 entries of index, sweep true/false at different % levels (70, 75, 80, 90, 95, 99, 100%), more than one mutant (true/false), first mutation init time, pop radius at first mut init)
+birth_rates <- read_csv("simulation_data_low_birth_rates/birth_rates.csv") # contains 40000 entries of the birth rate of the genotype with exactly 1 driver mutation and the most descendants
 
 
 # Numerical solutions
@@ -164,9 +164,13 @@ for (s in s_vector) {
 
 y_data3 <- c(0,0,0,0,0,0,0,0)                     # process the revised simulation data
 i3=1
-b_bins <-seq(0.5, 10, 0.5)     # the bins in to which the birth rates of the sweeps first mutant will be sorted
-b_bins_bottom <- b_bins - 0.5
-b_bins_plotting <- ((b_bins + b_bins_bottom ) / 2) / s_wt
+
+b_bins <- 2^seq(0, log2(4), length = 40) -1 # the bins in to which the birth rates of the sweeps first mutant will be sorted
+b_bins <- c(b_bins[2:length(b_bins)], 20) 
+b_bins_bottom <- c(0,head(b_bins, -1))
+b_bins_middle <- (b_bins + b_bins_bottom ) / 2
+b_bins_plotting <- b_bins_middle / s_wt
+b_bins_width <- (b_bins - b_bins_bottom)/s_wt
 previous_b <- 0
 
 for (b in b_bins) {
@@ -198,7 +202,7 @@ lty <- t(c("22", "solid"))
 colnames(lty) <- c(legend_2, legend_3)
 
 ggplot() +
-  geom_bar(aes(x=b_bins_plotting, y=y_data3), stat='identity', colour = "darkgrey", fill = "darkslategray2", position = "dodge", width = 5) +
+  geom_bar(aes(x=b_bins_plotting, y=y_data3), stat='identity', colour = "darkgrey", fill = "darkslategray2", position = "dodge", width = b_bins_width) +
   geom_line(aes(x=2:20, y=df_num$twodim, linetype=legend_2, color=legend_2), size=1.5) +
   geom_line(aes(x=xaxis, y=sweep_ana,linetype=legend_3, color=legend_3), linewidth=1.5) +
   #geom_point(aes(x=x_data, y=y_data1), color="black", size=4.0, shape=16) +
@@ -212,8 +216,8 @@ ggplot() +
   scale_shape_manual(values = shapes) +
   theme_bw(base_size = 25) +
   theme(axis.title.x = element_markdown(), axis.title.y = element_markdown(), 
-        legend.position = c(5,0.8), legend.title = element_blank(), legend.text = element_markdown()) +
-  ggtitle(paste0("Sweeps cut off at ", sweep_cutoff))
+        legend.position = c(5,0.8), legend.title = element_blank(), legend.text = element_markdown()) 
+  #ggtitle(paste0("Sweeps cut off at ", sweep_cutoff))
 
 
 # ### Save the figure

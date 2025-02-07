@@ -37,10 +37,10 @@ test_for_a_sweep <- function(configid, path){
     col_types = cols()
   )
 
-  more_then_one_mutant <- filter(
-    output,
-    NumCells == max(NumCells)) %>% summarise(NumGenotypes > 2 || (NumGenotypes > 1 && CellsWith0Drivers == 0)
-  ) %>% as.logical()
+  more_then_one_mutant <- TRUE #filter(
+ #   output,
+ #   NumCells == max(NumCells)) %>% summarise(NumGenotypes > 2 || (NumGenotypes > 1 && CellsWith0Drivers == 0)
+ # ) %>% as.logical()
   
   output_driver_genotype_properties <- read_delim(
     paste(
@@ -89,7 +89,7 @@ test_for_a_sweep <- function(configid, path){
   )
 }
 
-simulation_paths <- Sys.glob(file.path("/Users/katebostock/Documents/City_PhD/demon_model/Sweeps_revised/outputs/outputs5/simulations", "*"))
+simulation_paths <- Sys.glob(file.path("/Users/katebostock/Documents/City_PhD/demon_model/Sweeps_revised/outputs/outputsrevised_low_birth_rate/simulations", "*"))
 simulation_ids <- sapply(strsplit(simulation_paths, "/"), tail, 1)
 
 for (configid in simulation_ids){
