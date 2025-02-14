@@ -14,8 +14,8 @@ library("RColorBrewer")
 ###################
 
 ### Simulation data
-params <- read_csv("simulation_data_2mutations/params.csv")
-probs <- read_csv("simulation_data_2mutations/sweeps-prob-descendants.csv")
+params <- read_csv("simulation_data_original/params.csv") #simulation_data_2mutations/1000_sims
+probs <- read_csv("simulation_data_original/sweeps-prob.csv")
 
 param_wt <- read_csv("simulation_data_original/params_wt.csv")
 meas_wt <- read_csv("simulation_data_original/wt_speeds.csv")
@@ -69,11 +69,12 @@ mu_vector = c(1e-06,1e-05,1e-04,1e-03,1e-02)
 
 # Filter data of interest
 mu <- 1e-05
-s_m <- 0.3
+s_m <- 2
 rho <- (1-1/(1+s_m))/(1-1/(1+s_m)^demesize)
 df_f <- df %>% filter(mu_driver_birth == mu)
 df_ff <- df_f %>% filter(s_driver_birth == s_m)
 df_ff <- df_ff %>% filter(x100 == TRUE)
+labelText1 <- paste0("s = ", s_m, "\n Mean radius = ", round(mean(df_ff$pop_radius_at_first_mut_init), 2))
 
 # Compute analytic results
 #speeds <- df_ff$pop_radius_at_first_mut_init/df_ff$first_mutant_init_time
@@ -104,15 +105,17 @@ lty <- t(c("22", "solid"))
 colnames(lty) <- c(legend_2, legend_3)
 
 ggplot() + geom_histogram(aes(x=df_ff$pop_radius_at_first_mut_init, y=..density..), fill=cols[4], alpha=0.25, bins=21) +
-  geom_line(aes(x=df_num$xval_twodim, y=df_num$yval_twodim,color=legend_2, linetype=legend_2), linewidth=1.5) +
-  geom_line(aes(x=xaxis, y=f_X,color=legend_3,linetype=legend_3), linewidth=1.5) +
+  #geom_line(aes(x=df_num$xval_twodim, y=df_num$yval_twodim,color=legend_2, linetype=legend_2), linewidth=1.5) +
+  #geom_line(aes(x=xaxis, y=f_X,color=legend_3,linetype=legend_3), linewidth=1.5) +
   labs(x="population radius, *x*", y="*f<sub>X*(*X=x*|sweep)") +
   #geom_label(aes(x=c(15),y=c(0.2), label=paste("mu = ", mu, " and s = ", s_m,  sep = "") ), size=6 ) +
-  xlim(0,100) + theme_bw(base_size = 25) +
+  xlim(0,70) + ylim(0,0.075) +theme_bw(base_size = 25) +
   scale_color_manual(values = colours) +
   scale_linetype_manual(values = lty) +
+  annotate(geom="text", label = labelText1, x = 50, y = 0.04,    size = 6, color = "blue") +
   theme(axis.title.x = element_markdown(), axis.title.y = element_markdown(), 
         legend.position = c(0.7,0.8),legend.title = element_blank())
+
 
 
 # ### Save the figure

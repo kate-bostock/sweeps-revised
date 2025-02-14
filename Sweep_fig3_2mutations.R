@@ -203,9 +203,6 @@ ggplot() +
   #geom_line(aes(x=x_data, y=fix),col = "black", linewidth=2.0) +
   labs(x="ratio of fitness difference, *a<sub>m* / *a<sub>wt*", y="Pr(sweep)") +
   xlim(0,20) + ylim(0,1) +
-  scale_color_manual(values = colours) +
-  scale_linetype_manual(values = lty) +
-  scale_shape_manual(values = shapes) +
   theme_bw(base_size = 25) +
   theme(axis.title.x = element_markdown(), axis.title.y = element_markdown(), 
         legend.position = c(5,0.8), legend.title = element_blank(), legend.text = element_markdown()) 

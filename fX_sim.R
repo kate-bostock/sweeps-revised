@@ -14,8 +14,8 @@ library("RColorBrewer")
 ### Import data ###
 ###################
 
-params <- read_csv("simulation_data_2mutations/params.csv")
-probs <- read_csv("simulation_data_2mutations/sweeps-prob-descendants.csv")
+params <- read_csv("simulation_data_original/params.csv")
+probs <- read_csv("simulation_data_original/sweeps-prob.csv")
 
 param_wt <- read_csv("simulation_data_original/params_wt.csv")
 meas_wt <- read_csv("simulation_data_original/wt_speeds.csv")

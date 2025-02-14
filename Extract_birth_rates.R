@@ -6,11 +6,11 @@ suppressPackageStartupMessages(suppressWarnings(library(dplyr)))
 
 summary_df <- data.frame(
   index=character(),
-  birth_rate_largest_clone=character(),
+  birth_rate_last_sweep=character(),
   stringsAsFactors=FALSE
 ) 
 
-setwd("/Users/katebostock/Documents/City_PhD/demon_model/Sweeps_revised/outputs/outputsrevised_low_birth_rate/simulations")
+setwd("/Users/katebostock/Documents/City_PhD/demon_model/Sweeps_revised/outputs/Revised_simulations_1000/simulations")
 
 get_birth_rate <- function(configid, path){
   
@@ -26,17 +26,18 @@ get_birth_rate <- function(configid, path){
     col_types = cols()
   )
   
-  output_driver_genotype <- filter(output_driver_genotype, DriverMutations == 1)
+  output_driver_genotype <- filter(output_driver_genotype, DriverMutations != 0)  
   output_driver_genotype <- filter(output_driver_genotype, Descendants == max(output_driver_genotype$Descendants))
-  
-  return(
+  output_driver_genotype <- filter(output_driver_genotype, DriverMutations == max(output_driver_genotype$DriverMutations))  
+
+    return(
     list(
-      "birth_rate_largest_clone"=mean(output_driver_genotype$BirthRate)
+      "birth_rate_last_sweep"=mean(output_driver_genotype$BirthRate)
     )
   )
 }
 
-simulation_paths <- Sys.glob(file.path("/Users/katebostock/Documents/City_PhD/demon_model/Sweeps_revised/outputs/outputsrevised_low_birth_rate/simulations", "*"))
+simulation_paths <- Sys.glob(file.path("/Users/katebostock/Documents/City_PhD/demon_model/Sweeps_revised/outputs/Revised_simulations_1000/simulations", "*"))
 simulation_ids <- sapply(strsplit(simulation_paths, "/"), tail, 1)
 
 for (configid in simulation_ids){
@@ -51,16 +52,16 @@ for (configid in simulation_ids){
   )
   
   
-  birth_rate_largest_clone = returnlist$birth_rate_largest_clone
+  birth_rate_last_sweep = returnlist$birth_rate_last_sweep
 
   
   summary_df[nrow(summary_df) + 1,] <- c(
-    configid, birth_rate_largest_clone 
+    configid, birth_rate_last_sweep 
   )
 }
 
 write.csv(
   summary_df,
-  "/Users/katebostock/Documents/City_PhD/demon_model/Sweeps_revised/outputs/outputsrevised_low_birth_rate/birth_rates.csv"
+  "/Users/katebostock/Documents/City_PhD/demon_model/Sweeps_revised/outputs/Revised_simulations_1000/birth_rates_finalsweep.csv"
 )
 
