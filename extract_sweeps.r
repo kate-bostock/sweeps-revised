@@ -89,7 +89,7 @@ test_for_a_sweep <- function(configid, path){
   )
 }
 
-simulation_paths <- Sys.glob(file.path("/Users/katebostock/Documents/City_PhD/demon_model/Sweeps_revised/outputs/outputsrevised1000_high_s_3/simulations", "*"))
+simulation_paths <- Sys.glob(file.path("/Users/katebostock/Documents/City_PhD/demon_model/Sweeps_revised/Figure 3/output_sweeps_small_s/simulations", "*"))
 simulation_ids <- sapply(strsplit(simulation_paths, "/"), tail, 1)
 
 for (configid in simulation_ids){

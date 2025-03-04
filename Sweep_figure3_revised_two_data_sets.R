@@ -42,6 +42,15 @@ params_revised <- read_csv("simulation_data_revised/1000_sims/params.csv")
 probs_revised <- read_csv("simulation_data_revised/1000_sims/sweeps-prob-descendants.csv") 
 birth_rates_mean <- read_csv("simulation_data_revised/1000_sims/birth_rates_end_mean.csv") 
 
+params_revised2 <- read_csv("simulation_data_s015/params.csv") 
+probs_revised2 <- read_csv("simulation_data_s015/sweeps-prob-descendants.csv") 
+birth_rates_mean2 <- read_csv("simulation_data_s015/birth_rates_end_mean_all.csv") 
+
+# join the two data sets
+params_revised <- rbind(params_revised, params_revised2)
+probs_revised <- rbind(probs_revised, probs_revised2)
+birth_rates_mean <- rbind(birth_rates_mean, birth_rates_mean2)
+
 # Numerical solutions
 df_num <- read_csv("numerical_data/sweep probability vs speed ratio c_wt 0.152 mutation rate 2.34e-06 simplifying assumption 0.csv")
 df_num <- rename(df_num, c("ratio"="Speed ratio", "twodim"="2D", "threedim"="3D"))
@@ -66,7 +75,6 @@ df_mut <- merge(meas_mut, param_mut, by.x = "id" , by.y = "index" )
 df_revised <- merge(probs_revised, params_revised, by.x = "id" , by.y = "index" )
 df_revised <- merge(df_revised, birth_rates_mean, by.x = "id" , by.y = "index" )
 df_revised <- df_revised[, !duplicated(as.list(df_revised))]
-#df_revised <- filter(df_revised, s_driver_birth ==0.1)
 
 ###########################
 ### Read out the speeds ###
@@ -167,7 +175,7 @@ for (s in s_vector) {
 y_data3 <- c(0,0,0,0,0,0,0,0)                     # process the revised simulation data
 i3=1
 
-b_bins <- 2*(2^seq(0, log2(6), length = 20) -1) # the bins in to which the birth rates of the sweeps first mutant will be sorted
+b_bins <- 2*(2^seq(0, log2(6), length = 40) -1) # the bins in to which the birth rates of the sweeps first mutant will be sorted
 b_bins <- b_bins[-1]
 b_bins_bottom <- c(0,head(b_bins, -1))
 b_bins_middle <- (b_bins + b_bins_bottom ) / 2

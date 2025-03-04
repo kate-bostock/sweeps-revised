@@ -6,13 +6,13 @@ suppressPackageStartupMessages(suppressWarnings(library(dplyr)))
 
 summary_df <- data.frame(
   index=character(),
-  birth_rate_end_mean=character(),
+  drivers_end_mean=character(),
   stringsAsFactors=FALSE
 ) 
 
-setwd("/Volumes/Seagate Backup Plus Drive/sweeps_retest/simulations")
+setwd("/Volumes/Seagate Backup Plus Drive/outputs/Revised_simulations_1000/simulations")
 
-get_birth_rate <- function(configid, path){
+get_drivers <- function(configid, path){
   
   # To extract summary of birth rates from a batch of simulation outputs
   output_driver_genotype <- read_delim(
@@ -26,22 +26,21 @@ get_birth_rate <- function(configid, path){
     col_types = cols()
   )
   
-  #output_driver_genotype <- filter(output_driver_genotype, DriverMutations != 0)  # KB: doesn't make any difference to the results whether we leave out the WT or not.
-  output_driver_genotype <- mutate(output_driver_genotype, Pop_x_br = Population * BirthRate)
+  output_driver_genotype <- mutate(output_driver_genotype, Pop_x_dr = Population * DriverMutations)
   
   return(
     list(
-      "birth_rate_end_mean"=sum(output_driver_genotype$Pop_x_br)/sum(output_driver_genotype$Population)
+      "drivers_end_mean"=sum(output_driver_genotype$Pop_x_dr)/sum(output_driver_genotype$Population)
     )
   )
 }
 
-simulation_paths <- Sys.glob(file.path("/Volumes/Seagate Backup Plus Drive/sweeps_retest/simulations", "*"))
+simulation_paths <- Sys.glob(file.path("/Volumes/Seagate Backup Plus Drive/outputs/Revised_simulations_1000/simulations", "*"))
 simulation_ids <- sapply(strsplit(simulation_paths, "/"), tail, 1)
 
 for (configid in simulation_ids){
   
-  returnlist = get_birth_rate(
+  returnlist = get_drivers(
     configid,
     paste(
       "",
@@ -51,16 +50,16 @@ for (configid in simulation_ids){
   )
   
   
-  birth_rate_end_mean = returnlist$birth_rate_end_mean
+  drivers_end_mean = returnlist$drivers_end_mean
   
   
   summary_df[nrow(summary_df) + 1,] <- c(
-    configid, birth_rate_end_mean 
+    configid, drivers_end_mean 
   )
 }
 
 write.csv(
   summary_df,
-  "birth_rates_end_mean_all.csv"
+  "/Users/katebostock/Documents/City_PhD/demon_model/Sweeps_revised/Figure 3/simulation_data_revised/1000_sims/drivers_end_mean_all.csv"
 )
 

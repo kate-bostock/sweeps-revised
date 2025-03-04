@@ -38,8 +38,8 @@ meas_wt <- read_csv("simulation_data_original/wt_speeds.csv") # contains 2560 en
 param_mut <- read_csv("simulation_data_original/params_mut.csv") # contains 12800 entries of log2_deme(1, 2, 3, 4, 5, 6, 7, 8), migration_rate (0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 0.75, 1), s_driver_birth (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2)
 meas_mut <- read_csv("simulation_data_original/mut_speeds.csv") # contains 12800 entries of speed_early, speed_late
 
-params_revised <- read_csv("simulation_data_revised/1000_sims/params.csv") 
-probs_revised <- read_csv("simulation_data_revised/1000_sims/sweeps-prob-descendants.csv") 
+params_revised <- read_csv("simulation_data_high_birth_rates/params.csv") 
+probs_revised <- read_csv("simulation_data_high_birth_rates/sweeps-prob-descendants.csv") 
 birth_rates_mean <- read_csv("simulation_data_revised/1000_sims/birth_rates_end_mean.csv") 
 
 # Numerical solutions
@@ -66,7 +66,6 @@ df_mut <- merge(meas_mut, param_mut, by.x = "id" , by.y = "index" )
 df_revised <- merge(probs_revised, params_revised, by.x = "id" , by.y = "index" )
 df_revised <- merge(df_revised, birth_rates_mean, by.x = "id" , by.y = "index" )
 df_revised <- df_revised[, !duplicated(as.list(df_revised))]
-#df_revised <- filter(df_revised, s_driver_birth ==0.1)
 
 ###########################
 ### Read out the speeds ###
@@ -167,7 +166,7 @@ for (s in s_vector) {
 y_data3 <- c(0,0,0,0,0,0,0,0)                     # process the revised simulation data
 i3=1
 
-b_bins <- 2*(2^seq(0, log2(6), length = 20) -1) # the bins in to which the birth rates of the sweeps first mutant will be sorted
+b_bins <- 2*(2^seq(0, log2(6), length = 40) -1) # the bins in to which the birth rates of the sweeps first mutant will be sorted
 b_bins <- b_bins[-1]
 b_bins_bottom <- c(0,head(b_bins, -1))
 b_bins_middle <- (b_bins + b_bins_bottom ) / 2
@@ -204,10 +203,10 @@ lty <- t(c("22", "solid"))
 colnames(lty) <- c(legend_2, legend_3)
 
 ggplot() +
-  geom_bar(aes(x=b_bins_plotting, y=y_data3), stat='identity', colour = "darkgrey", fill = "darkslategray2", position = "dodge", width = b_bins_width) +
+  #geom_bar(aes(x=b_bins_plotting, y=y_data3), stat='identity', colour = "darkgrey", fill = "darkslategray2", position = "dodge", width = b_bins_width) +
   geom_line(aes(x=2:20, y=df_num$twodim, linetype=legend_2, color=legend_2), size=1.5) +
   geom_line(aes(x=xaxis, y=sweep_ana,linetype=legend_3, color=legend_3), linewidth=1.5) +
-  #geom_point(aes(x=x_data1, y=y_data1), color="black", size=4.0, shape=16) +
+  geom_point(aes(x=x_data1, y=y_data1), color="black", size=4.0, shape=16) +
   geom_point(aes(x=x_data2, y=y_data2), color="black", size=4.0, shape=17) +
   #geom_point(aes(x=b_bins_plotting, y=y_data3), color="blue", size=4.0, shape=18) +
   #geom_line(aes(x=x_data, y=fix),col = "black", linewidth=2.0) +
